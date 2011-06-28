@@ -65,16 +65,88 @@
     </section>
 
     <section title="Terminology" anchor="terms">
-      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target='RFC2119'/>.</t>
+      <t>The character ^ denotes exponentiation.</t>
       <t>Certain security-related terms are to be understood in the sense defined in <xref target="RFC4949"/>; such terms include, but are not limited to, "assurance", "attack", "authentication", "authorization", "certificate", "certification authority", "certification path", "confidentiality", "credential", "downgrade", "encryption", "hash value", "identity", "integrity", "signature", "self-signed certificate", "sign", "spoof", "tamper", "trust", "trust anchor", "validate", and "verify".</t>
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target='RFC2119'/>.</t>
     </section>
 
     <section title="Overview" anchor="overview">
+
       <t>This section provides a high-level overview of the protocol.</t>
+
+      <section title="Requesting an OTR Conversation" anchor="overview-request">
+        <t>There are two ways Alice can inform Bob that she is willing to use the OTR protocol to speak with him: by sending him the OTR Query Message, or by including a special "tag" consisting of whitespace characters in one of her messages to him.  Each method also includes a way for Alice to communicate to Bob which versions of the OTR protocol she is willing to speak with him.</t>
+        <t>The semantics of the OTR Query Message are that Alice is requesting that Bob start an OTR conversation with her (if, of course, he is willing and able to do so).  On the other hand, the semantics of the whitespace tag are that Alice is merely indicating to Bob that she is willing and able to have an OTR conversation with him.  If Bob has a policy of "only use OTR when it's explicitly requested", for example, then he would start an OTR conversation upon receiving an OTR Query Message, but would not upon receiving the whitespace tag.</t>
+      </section>
+
+      <section title="Authenticated Key Exchange" anchor="overview-ake">
+        <t>This section outlines the version of the SIGMA protocol used as the AKE.  All exponentiations are done modulo a particular 1536-bit prime, and g is a generator of that group, as indicated in the detailed description below.  Alice and Bob's long-term authentication public keys are pubA and pubB, respectively.</t>
+        <t>The general idea is that Alice and Bob do an unauthenticated Diffie-Hellman (D-H) key exchange to set up an encrypted channel, and then do mutual authentication inside that channel.</t>
+        <t>When Bob initiates the AKE with Alice, the process is as follows.</t>
+        <t>
+          <list style='numbers'>
+            <t>Bob does the following:<vspace blankLines='1'/>
+              <list style='numbers'>
+                <t>Picks a random value r (128 bits)</t>
+                <t>Picks a random value x (at least 320 bits)</t>
+                <t>Sends Alice AESr(g^x), HASH(g^x)</t>
+              </list><vspace blankLines='1'/>
+            </t>
+            <t>Alice does the following:<vspace blankLines='1'/>
+              <list style='numbers'>
+                <t>Picks a random value y (at least 320 bits)</t>
+                <t>Sends Bob g^y</t>
+              </list><vspace blankLines='1'/>
+            </t>
+            <t>Bob does the following:<vspace blankLines='1'/>
+              <list style='numbers'>
+                <t>Verifies that Alice's g^y is a legal value (2 &gt;= g^y &gt;= modulus-2)</t>
+                <t>Computes s = (g^y)^x</t>
+                <t>Computes two AES keys c, c' and four MAC keys m1, m1', m2, m2' by hashing s in various ways</t>
+                <t>Picks keyidB, a serial number for his D-H key g^x</t>
+                <t>Computes MB = MACm1(g^x, g^y, pubB, keyidB)</t>
+                <t>Computes XB = pubB, keyidB, sigB(MB)</t>
+                <t>Sends Alice r, AESc(XB), MACm2(AESc(XB))</t>
+              </list><vspace blankLines='1'/>
+            </t>
+            <t>Alice does the following:<vspace blankLines='1'/>
+              <list style='numbers'>
+                <t>Uses r to decrypt the value of gx sent earlier</t>
+                <t>Verifies that HASH(g^x) matches the value sent earlier</t>
+                <t>Verifies that Bob's g^x is a legal value (2 &gt;= g^x &gt;= modulus-2)</t>
+                <t>Computes s = (g^x)^y (note that this will be the same as the value of s Bob calculated)</t>
+                <t>Computes two AES keys c, c' and four MAC keys m1, m1', m2, m2' by hashing s in various ways (the same as Bob)</t>
+                <t>Uses m2 to verify MACm2(AESc(XB))</t>
+                <t>Uses c to decrypt AESc(XB) to obtain XB = pubB, keyidB, sigB(MB)</t>
+                <t>Computes MB = MACm1(g^x, g^y, pubB, keyidB)</t>
+                <t>Uses pubB to verify sigB(MB)</t>
+                <t>Picks keyidA, a serial number for her D-H key gy</t>
+                <t>Computes MA = MACm1'(gy, gx, pubA, keyidA)</t>
+                <t>Computes XA = pubA, keyidA, sigA(MA)</t>
+                <t>Sends Bob AESc'(XA), MACm2'(AESc'(XA))</t>
+              </list><vspace blankLines='1'/>
+            </t>
+            <t>Bob does the following:<vspace blankLines='1'/>
+              <list style='numbers'>
+                <t>Uses m2' to verify MACm2'(AESc'(XA))</t>
+                <t>Uses c' to decrypt AESc'(XA) to obtain XA = pubA, keyidA, sigA(MA)</t>
+                <t>Computes MA = MACm1'(g^y, g^x, pubA, keyidA)</t>
+                <t>Uses pubA to verify sigA(MA)</t>
+              </list>
+            </t>
+          </list>
+        </t>
+        <t>If all of the verifications succeeded, Alice and Bob now know each other's Diffie-Hellman public keys, and share the value s. Alice is assured that s is known by someone with access to the private key corresponding to pubB, and similarly for Bob.</t>
+      </section>
+
+      <section title="Exchanging Data" anchor="overview-exchange">
+      <t>To follow.</t>
+      </section>
+
     </section>
 
     <section title="Protocol Description" anchor="protocol">
-      <t>This section provides a detailed description of the protocol.</t>
+      <t>To follow.</t>
     </section>
 
     <section title="Security Considerations" anchor="security">
