@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE rfc SYSTEM "rfc2629.dtd">
+
+<?rfc compact="yes"?>
+<?rfc iprnotified="no" ?>
+<?rfc sortrefs="yes"?>
+<?rfc strict="yes"?>
+<?rfc symrefs="yes"?>
+<?rfc toc="yes"?>
+<?rfc tocdepth="4"?>
+
+<rfc category="info" docName="draft-saintandre-otr-v2-00" ipr="trust200902">
+
+  <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+
+  <front>
+    <title abbrev="OTRv2">Off-the-Record Messaging Protocol, Version 2</title>
+    <author initials="I." surname="Goldberg" fullname="Ian Goldberg">
+      <organization>University of Waterloo</organization>
+      <address>
+        <postal>
+          <street>200 University Ave W</street>
+          <city>Waterloo</city>
+          <region>ONT</region>
+          <code>N2L 3G1</code>
+          <country>Canada</country>
+        </postal>
+        <email>iang@cs.uwaterloo.ca</email>
+      </address>
+    </author>
+    <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre" role="editor">
+      <organization>Cisco</organization>
+      <address>
+        <postal>
+          <street>1899 Wyknoop Street, Suite 600</street>
+          <city>Denver</city>
+          <region>CO</region>
+          <code>80202</code>
+          <country>USA</country>
+        </postal>
+        <phone>+1-303-308-3282</phone>
+        <email>psaintan@cisco.com</email>
+      </address>
+    </author>
+    <date day="28" month="June" year="2011"/>
+    <abstract>
+      <t>This document describes version 2 of the Off-the-Record Messaging protocol ("OTR").  The protocol is used for end-to-end encryption of messages exchanged via common instant messaging technologies.  OTR assumes a network model that provides in-order delivery of messages, but also assumes that some messages might not be delivered at all (for example, if the intended recipient disconnects).  OTR is designed to protect the confidentiality of messages against an active attacker, but it not designed to protect against some other attacks (e.g., Denial of Service).</t>
+    </abstract>
+  </front>
+
+  <middle>
+
+    <section title="Introduction" anchor='intro'>
+      <t>This document describes version 2 of the Off-the-Record Messaging protocol ("OTR").  The protocol is used for end-to-end encryption of messages exchanged via common instant messaging technologies.  OTR assumes a network model that provides in-order delivery of messages, but also assumes that some messages might not be delivered at all (for example, if the intended recipient disconnects).  OTR is designed to protect the confidentiality of messages against an active attacker, but it not designed to protect against some other attacks (e.g., Denial of Service).</t>
+      <t>In essence, the protocol proceeds as follows:</t>
+      <t>
+        <list style='numbers'>
+          <t>Alice signals to Bob that she would like to use OTR to communicate (using an "OTR Query Message") or that she is willing to use OTR to communicate (using a whitespace-tagged plaintext message).  Both mechanisms convey the version(s) of OTR that Alice supports.</t>
+          <t>Bob initiates an authenticated key exchange (AKE) with Alice.  (Version 2 of OTR uses a variant of the SIGMA protocol as its AKE.)</t>
+          <t>Alice and Bob exchange Data Messages in order to send information to each other.</t>
+        </list>
+      </t>
+      <t>Details are provided under <xref target='overview'/> and <xref target='protocol'/>.</t>
+    </section>
+
+    <section title="Terminology" anchor="terms">
+      <t>The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in <xref target='RFC2119'/>.</t>
+      <t>Certain security-related terms are to be understood in the sense defined in <xref target="RFC4949"/>; such terms include, but are not limited to, "assurance", "attack", "authentication", "authorization", "certificate", "certification authority", "certification path", "confidentiality", "credential", "downgrade", "encryption", "hash value", "identity", "integrity", "signature", "self-signed certificate", "sign", "spoof", "tamper", "trust", "trust anchor", "validate", and "verify".</t>
+    </section>
+
+    <section title="Overview" anchor="overview">
+      <t>This section provides a high-level overview of the protocol.</t>
+    </section>
+
+    <section title="Protocol Description" anchor="protocol">
+      <t>This section provides a detailed description of the protocol.</t>
+    </section>
+
+    <section title="Security Considerations" anchor="security">
+      <t>To follow.</t>
+    </section>
+
+  </middle>
+
+  <back>
+
+    <references title="Normative References">
+
+<reference anchor="RFC2119">
+<front>
+<title abbrev='RFC Key Words'>Key words for use in RFCs to Indicate Requirement Levels</title>
+<author initials='S.' surname='Bradner' fullname='Scott Bradner'>
+<organization>Harvard University</organization>
+<address>
+<postal>
+<street>1350 Mass.  Ave.</street>
+<street>Cambridge</street>
+<street>MA 02138</street></postal>
+<phone>- +1 617 495 3864</phone>
+<email>sob@harvard.edu</email></address></author>
+<date month='March' year='1997' />
+<area>General</area>
+<keyword>keyword</keyword>
+<abstract>
+<t>
+   In many standards track documents several words are used to signify
+   the requirements in the specification.  These words are often
+   capitalized.  This document defines these words as they should be
+   interpreted in IETF documents.  Authors who follow these guidelines
+   should incorporate this phrase near the beginning of their document:
+
+<list>
+<t>
+      The key words &quot;MUST&quot;, &quot;MUST NOT&quot;, &quot;REQUIRED&quot;, &quot;SHALL&quot;, &quot;SHALL
+      NOT&quot;, &quot;SHOULD&quot;, &quot;SHOULD NOT&quot;, &quot;RECOMMENDED&quot;,  &quot;MAY&quot;, and
+      &quot;OPTIONAL&quot; in this document are to be interpreted as described in
+      RFC 2119.
+</t></list></t>
+<t>
+   Note that the force of these words is modified by the requirement
+   level of the document in which they are used.
+</t></abstract></front>
+<seriesInfo name='BCP' value='14' />
+<seriesInfo name='RFC' value='2119' />
+<format type='TXT' octets='4723' target='ftp://ftp.isi.edu/in-notes/rfc2119.txt' />
+<format type='HTML' octets='14486' target='http://xml.resource.org/public/rfc/html/rfc2119.html' />
+<format type='XML' octets='5661' target='http://xml.resource.org/public/rfc/xml/rfc2119.xml' />
+</reference>
+
+
+    </references>
+
+    <references title="Informative References">
+
+<reference anchor='RFC4949'>
+<front>
+<title>Internet Security Glossary, Version 2</title>
+<author initials='R.' surname='Shirey' fullname='R. Shirey'>
+<organization /></author>
+<date year='2007' month='August' />
+<abstract>
+<t>This Glossary provides definitions, abbreviations, and explanations of terminology for information system security.  The 334 pages of entries offer recommendations to improve the comprehensibility of written material that is generated in the Internet Standards Process (RFC 2026).  The recommendations follow the principles that such writing should (a) use the same term or definition whenever the same concept is mentioned; (b) use terms in their plainest, dictionary sense; (c) use terms that are already well-established in open publications; and (d) avoid terms that either favor a particular vendor or favor a particular technology or mechanism over other, competing techniques that already exist or could be developed.  This memo provides information for the Internet community.</t></abstract></front>
+<seriesInfo name='RFC' value='4949' />
+<format type='TXT' octets='867626' target='http://www.rfc-editor.org/rfc/rfc4949.txt' />
+</reference>
+
+    </references>
+
+  </back>
+
+</rfc>
