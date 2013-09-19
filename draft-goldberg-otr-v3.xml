@@ -5,6 +5,10 @@
       'http://xml.resource.org/public/rfc/bibxml/reference.RFC.2119.xml'>
     <!ENTITY rfc3526 PUBLIC ''
       'http://xml.resource.org/public/rfc/bibxml/reference.RFC.3526.xml'>
+    <!ENTITY rfc4648 PUBLIC ''
+      'http://xml.resource.org/public/rfc/bibxml/reference.RFC.4648.xml'>
+    <!ENTITY rfc4949 PUBLIC ''
+      'http://xml.resource.org/public/rfc/bibxml/reference.RFC.4949.xml'>
 ]>
 
 <?rfc compact="yes"?>
@@ -15,7 +19,7 @@
 <?rfc toc="yes"?>
 <?rfc tocdepth="4"?>
 
-<rfc category="info" docName="draft-saintandre-otr-v3-00" ipr="trust200902">
+<rfc category="info" docName="draft-goldberg-otr-v3-00" ipr="trust200902">
 
   <?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
 
@@ -48,7 +52,19 @@
         <email>psaintan@cisco.com</email>
       </address>
     </author>
-    <date day="29" month="July" year="2013"/>
+    <author initials='P.' surname="Wouters" fullname='Paul Wouters'>
+      <organization>Red Hat</organization>
+      <address>
+       <email>pwouters@redhat.com</email>
+      </address>
+     </author>
+    <author initials='G.' surname="Bilkey" fullname='Geordie Bilkey'>
+      <organization>PowerInform</organization>
+      <address>
+       <email>geordie@powerinform.com</email>
+      </address>
+     </author>
+    <date month="September" year="2013"/>
     <abstract>
       <t>This document describes version 3 of the Off-the-Record Messaging protocol ("OTR").  The protocol is used for one-to-one end-to-end encryption of message content exchanged via any kind of instant messaging transport. It provides authenticity, privacy, perfect forward secrecry and repudiation. Additionally, it allows negotiating a symmetric encryption key that can be used for bulk data transfer, such as file transfers or audio/video transmissions. OTR assumes a network model that provides in-order delivery of messages, but also assumes that some messages might not be delivered at all (for example, if the intended recipient disconnects).  OTR is designed to protect the confidentiality of messages against passive and active attackers, but it not designed to protect against some other attacks (e.g., Denial of Service).</t>
     </abstract>
@@ -172,6 +188,144 @@ Alice and Bob's long-term authentication public keys are pubA and pubB, respecti
     </section>
 
     <section title="Protocol Description" anchor="protocol">
+
+     <section title="Message Encoding" anchor="message_encoding">
+      <t>User data (eg the conversation) can be extended with any number of TLV's. This data is than encrypted, and encoded with BASE64
+      </t>
+      <section title="UTF-8 and html" anchor="utf8">
+       <t>
+       </t>
+      </section> 
+      <section title="BASE64" anchor="base64">
+       <t>
+       </t>
+      </section> 
+      <section title="Combining encodings?" anchor="conbing">
+       <t>
+       </t>
+      </section> 
+     </section> 
+
+     <section title="Message Flow" anchor="message_flow">
+      <t> An OTR conversations
+        <figure><artwork><![CDATA[
+ 
+                 ALICE                             BOB
+
+                               [ plaintext ]
+                  Query Message  ----->
+                                 <-----  DH-Commit Message
+                  DH-Key Message ----->
+                                 <-----  Reveal Signature Message
+               Signature Message ----->
+                         [ Unverified / Private ]
+
+ Data Message (TLV Type not 1)   ----->
+                                 <----- Data Message (TLV Type not 1)
+                                 [...]
+
+              Data Message (TLV1) ----> 
+                               [ plaintext ]
+]]>
+</artwork></figure>
+      </t>
+     </section> 
+
+     <section title="Message Types" anchor="types">
+      <t>
+      </t>
+      <section title="Query and Init Message" anchor="query_message">
+       <t>
+       </t>
+      </section> 
+      <section title="Error Message" anchor="error_message">
+       <t>
+       </t>
+      </section> 
+      <section title="DH commit Message" anchor="dhcommit_message">
+       <t>
+       </t>
+      </section> 
+      <section title="DH key Message" anchor="dhkey_message">
+       <t>
+       </t>
+      </section> 
+      <section title="Reavel Signature Message" anchor="revealsig_message">
+       <t>
+       </t>
+      </section> 
+      <section title="Signature Message" anchor="signature_message">
+       <t>   
+       </t>
+      </section> 
+      <section title="Data Message" anchor="data_message">
+       <t> A data message is formed by:
+<figure><artwork><![CDATA[
+           <User input> | 0x00 | <TLV> <TLV>  ...
+]]>
+</artwork>
+</figure>
+       </t>
+       <section title="TLV Record types" anchor="tlv_message">
+        <t> TLV types, use sections or dropdown?
+<figure><artwork><![CDATA[
+   TLV Type:
+
+      One octet specifying the TLV typer. The following
+      values are assigned:
+
+          Value    TLV Numer              Format
+          -----    -------------------   --------
+          0        Padding               <insert me>
+          1        Disconnected          <insert me>
+          2        SMP Message 1         MPI Format
+          3        SMP Message 2         MPI Format
+          4        SMP Message 3         MPI Format
+          5        SMP Message 4         MPI Format
+          6        SMP Abort Message     <insert me>
+          7        SMP Message 1Q        <insert me>
+          8        Extra Symmetric Key   <insert me>
+]]>
+</artwork>
+</figure>
+        </t>
+         <section title="MPI Format" anchor="tlv_mpi_format">
+          <t>
+<figure><artwork><![CDATA[
+                      1                   2                   3
+  0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8 9 0 1
+ +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+ !                           MPI Count                           !
+ +---------------------------------------------------------------+
+ !                                                               !
+ ~                             MPI(s)                            ~
+ !                                                               !
+ +---------------------------------------------------------------+
+
+   MPI
+]]>
+</artwork>
+</figure>
+         
+          </t>
+         </section> 
+       </section> 
+      </section> 
+     </section> 
+
+     <section title="Fragmentation" anchor="fragmentation">
+      <t>
+      </t>
+     </section> 
+
+     <section title="Socialist Millionaires' Protocol" anchor="smp">
+      <t>
+      </t>
+     </section> 
+
+    </section>
+
+    <section title="Key format and storage" anchor="keyformat">
       <t>To follow.</t>
     </section>
 
@@ -190,22 +344,11 @@ Alice and Bob's long-term authentication public keys are pubA and pubB, respecti
     <references title="Normative References">
      &rfc2119;
      &rfc3526;
+     &rfc4648;
     </references>
 
     <references title="Informative References">
-
-<reference anchor='RFC4949'>
-<front>
-<title>Internet Security Glossary, Version 2</title>
-<author initials='R.' surname='Shirey' fullname='R. Shirey'>
-<organization /></author>
-<date year='2007' month='August' />
-<abstract>
-<t>This Glossary provides definitions, abbreviations, and explanations of terminology for information system security.  The 334 pages of entries offer recommendations to improve the comprehensibility of written material that is generated in the Internet Standards Process (RFC 2026).  The recommendations follow the principles that such writing should (a) use the same term or definition whenever the same concept is mentioned; (b) use terms in their plainest, dictionary sense; (c) use terms that are already well-established in open publications; and (d) avoid terms that either favor a particular vendor or favor a particular technology or mechanism over other, competing techniques that already exist or could be developed.  This memo provides information for the Internet community.</t></abstract></front>
-<seriesInfo name='RFC' value='4949' />
-<format type='TXT' octets='867626' target='http://www.rfc-editor.org/rfc/rfc4949.txt' />
-</reference>
-
+     &rfc4949;
     </references>
 
   </back>
