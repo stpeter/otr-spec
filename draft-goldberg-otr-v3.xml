@@ -52,13 +52,13 @@
         <email>psaintan@cisco.com</email>
       </address>
     </author>
-    <author initials='P.' surname="Wouters" fullname='Paul Wouters'>
+    <author initials='P.' surname="Wouters" fullname='Paul Wouters' role="editor">
       <organization>Red Hat</organization>
       <address>
        <email>pwouters@redhat.com</email>
       </address>
      </author>
-    <author initials='G.' surname="Bilkey" fullname='Geordie Bilkey'>
+    <author initials='G.' surname="Bilkey" fullname='Geordie Bilkey' role="editor">
       <organization>PowerInform</organization>
       <address>
        <email>geordie@powerinform.com</email>
