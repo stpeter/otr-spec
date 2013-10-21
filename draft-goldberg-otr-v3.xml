@@ -95,12 +95,81 @@
 
     <section title="Overview" anchor="overview">
 
-      <t>This section provides a high-level overview of the protocol.</t>
+      <t>This section provides a high-level overview of the OTR protocol.</t>
+      <t>The OTR protocol happens within the actual message content channel. This channel can be limited to only allow human reaadble characters. All OTR messages use base64 to encode the binary data into human readable characters. OTR messages also need to be uniquely identifiable as OTR messages so that OTR capable clients can identify and process these messages before displaying it to the user. The OTR protocol uses the prefix "?OTR" to denote that a message is an OTR protocol message. It uses base64 to encode all encrypted content.</t>
 
+      <section title="Requesting an OTR Conversation" anchor="overview-request">
+      <t>As the OTR protocol needs to work fully within the message content channel, discovery of the OTR capability has to be performed inide that channel. This process needs to be invisible to clients that do not support OTR. To achieve this, a special "morse code" message is appended to the user written message before the message is sent out over the network. This "morse code" message consists of spaces and tab characters. Both of these characters are displayed as whitespace and therefor do not disturb the conversation with someone using an instant message client that does not support OTR. An OTR-supporting client receiving this marker can initiate an OTR conversation automatically based on its local policy.</t>
 
-        <t>There are two ways Alice can inform Bob that she is willing to use the OTR protocol to speak with him: by sending him the OTR Query Message, or by including a special "tag" consisting of whitespace characters in one of her messages to him.  Each method also includes a way for Alice to communicate to Bob which versions of the OTR protocol she is willing to speak with him.</t>
+      <t>When an OTR-capable client requires all messages to be protected by OTR, it skips the discovery mechanism and sends an OTR Query Message. Like all OTR messages, it uses the "?OTR" prefix for the receiving OTR-capable client to process the message. This initial message also contains a human readable portion in plaintext or HTML that can be used to inform non-OTR capable clients about their lack of OTR support. OTR capable clients cannot prevent non-OTR clients from sending unencrypted messages.</t>
+      <t>Both the discovery and the initiation message contain an OTR version number to indicate which OTR versions the client supports. Currently only version "3" has been defined. Previous (non-standarized) versions SHOULD NOT be supported.</t>
+      </section>
 
-      <section title="Authenticated Key Exchange" anchor="overview-ake">
+      <section title="Establishing an OTR Conversation" anchor="overview-ake">
+      <t>When both parties agree to initiate an OTR conversation, an Authenticated Key Exchange ("AKE") is performed. AKE first ensures privacy via a Diffie-Hellman key exchange. This is followed by an exchange of the participants "long term public key" that identifies the parties. Both parties need to authenticate each other's long term public key out-of-band. The "long term public key" is only used for authentication. It is never used for encryption.
+      </t>
+      </section>
+
+      <section title="Handling multiple sign-ons" anchor="overview-signon">
+      <t>
+        Most IM networks allow users to be signed in multiple times. That allows users to run their IM software on multiple devices
+        at once. Messages send to a user arrive on all instances of that user, but only one instance can decrypt the OTR session.</t>
+      <t>Clients include instance tags in all OTR messages to differentiate the client instances for each user.</t>
+      </section>
+
+      <section title="Fragmentation of data " anchor="overview-fragmentation">
+      <t>
+       A user trying to send a message that before encryption is near or at the maximum message size of the message network will result in an encrypted mesage that exceeds the network's maximum message size.
+OTR allows an encrypted message to be fragmented into parts that are send as individual messages over the
+message network. Because OTR is transport-agnostic, the maximum message size is not specified in this protocol. 
+      </t>
+      </section>
+
+      <section title="The Socialist Millionaires' Protocol (SMP) " anchor="overview-smp">
+        <t>Once the AKE has completed successfully, each client has the other's public key and an encrypted channel has been formed. At this
+ point, both parties can mutually authenticate each other to ensure no man in the middle attack is taking place. Some information must have 
+been shared out of band (such as in persion) to securely authenticate successfully. The Socialist Millionaires' Protocol as used by OTR prov
+ides an alternative to manually checking the public key fingerprint which is often inconvenient or impossible to have communicated in the pa
+st e.g. the public keys of both parties did not exist when the two parties last communicated. SMP allows an arbitrary string to act as a sha
+red secret while preserving perfect forward secrecy. This shared secret can be much more human friendly and easier to communicate than a key
+ fingerprint.</t>
+        <t>Clients also include the option for a user to send a textual question along with the authentication query which is displayed when
+ prompting the other party for input. This provides several benefits in shared secret selection as any private information known to both par
+ties can be the subject of an authentication question. This allows, for example, two parties with prior interactions to start using OTR to c
+ommunicate without exchanging formal key information in person; instead authenticating by asking a sufficiently specific question about shar
+ed history.</t>
+      </section>
+
+      <section title="Exchanging Encrypted Messages" anchor="overview-exchange">
+      <t>To follow.</t>
+      </section>
+
+      <section title="Exchanging Encrypted Bulk Data" anchor="overview-bulk">
+      <t>The OTR protocol itself is not well suited for bulk encryption of data. [how true is this?] Many message networks only allow messages to be transported at human speeds and activate rate limiting when an instant message client bursts out too many messages in a short time frame. Some message networks have special facilities for bulk data transfer that should be used instead, often identified as a "Send File" option. Some message networks also support audio and video streams separate from the message channel.</t>
+      <t>The OTR protocol allows negotiation of a symmetric key that can be used to encrypt and decrypt bulk data. Transport of the encrypted bulk data can happen within the conversation stream, via the message network's alternative transport mechanisms for bulk data, or completely outside the message network such as email.</t>
+      </section>
+    </section>
+
+    <section title="Protocol Description" anchor="protocol">
+
+     <section title="Message Encoding" anchor="message_encoding">
+      <t>User data (eg the conversation) can be extended with any number of TLV's. This data is than encrypted, and encoded with BASE64
+      </t>
+      <section title="UTF-8 and html" anchor="utf8">
+       <t>
+       </t>
+      </section> 
+      <section title="BASE64" anchor="base64">
+       <t>
+       </t>
+      </section> 
+      <section title="Combining encodings?" anchor="conbing">
+       <t>
+       </t>
+      </section> 
+     </section> 
+
+      <section title="Authenticated Key Exchange" anchor="protocol-ake">
         <t>This section outlines the version of the SIGMA protocol used as the AKE.  All exponentiations are done using the 1536-bit modules (hex,big-endian) from <xref target='RFC3526'/> with g=2 as a generator of that group.
 
 Alice and Bob's long-term authentication public keys are pubA and pubB, respectively.</t>
@@ -161,51 +230,6 @@ Alice and Bob's long-term authentication public keys are pubA and pubB, respecti
         </t>
         <t>If all of the verifications succeeded, Alice and Bob now know each other's Diffie-Hellman public keys, and share the value s. Alice is assured that s is known by someone with access to the private key corresponding to pubB, and similarly for Bob.</t>
       </section>
-
-      <section title="Requesting an OTR Conversation" anchor="overview-request">
-        <t>There are two ways Alice can inform Bob that she is willing to use the OTR protocol to speak with him: by sending him the OTR Query Message, or by including a special "tag" consisting of whitespace characters in one of her messages to him.  Each method also includes a way for Alice to communicate to Bob which versions of the OTR protocol she is willing to speak with him.</t>
-        <t>The semantics of the OTR Query Message are that Alice is requesting that Bob start an OTR conversation with her (if, of course, he is willing and able to do so).  On the other hand, the semantics of the whitespace tag are that Alice is merely indicating to Bob that she is willing and able to have an OTR conversation with him.  If Bob has a policy of "only use OTR when it's explicitly requested", for example, then he would start an OTR conversation upon receiving an OTR Query Message, but would not upon receiving the whitespace tag.</t>
-      </section>
-
-      <section title="Instance tags" anchor="instance-tags">
-      <t>Clients include instance tags in all OTR version 3 messages. Instance tags are 32-bit values that are intended to be persistent. If the same client is logged into the same account from multiple locations, the intention is that the client will have different instance tags at each location. As shown below, OTR version 3 messages (fragmented and unfragmented) include the source and destination instance tags. If a client receives a message that lists a destination instance tag different from its own, the client should discard the message.</t>
-      <t>The smallest valid instance tag is 0x00000100. It is appropriate to set the destination instance tag to '0' when an actual destination instance tag is not known at the time the message is prepared. If a client receives a message with the sender instance tag set to less than 0x00000100, it should discard the message. Similarly, if a client receives a message with the recipient instance tag set to greater than 0 but less than 0x00000100, it should discard the message.</t>
-      <t>This avoids an issue on IM networks that always relay all messages to all sessions of a client who is logged in multiple times. In this situation, OTR clients can attempt to establish an OTR session indefinitely if there are interleaving messages from each of the sessions.</t>
-      </section>
-
-      <section title="Fragmentation of data " anchor="overview-fragmentation">
-      <t>To follow.</t>
-      </section>
-
-      <section title="The Socialist Millionaires' Protocol (SMP) " anchor="overview-smp">
-      <t>To follow.</t>
-      </section>
-
-      <section title="Exchanging Data" anchor="overview-exchange">
-      <t>To follow.</t>
-      </section>
-
-    </section>
-
-    <section title="Protocol Description" anchor="protocol">
-
-     <section title="Message Encoding" anchor="message_encoding">
-      <t>User data (eg the conversation) can be extended with any number of TLV's. This data is than encrypted, and encoded with BASE64
-      </t>
-      <section title="UTF-8 and html" anchor="utf8">
-       <t>
-       </t>
-      </section> 
-      <section title="BASE64" anchor="base64">
-       <t>
-       </t>
-      </section> 
-      <section title="Combining encodings?" anchor="conbing">
-       <t>
-       </t>
-      </section> 
-     </section> 
-
      <section title="Message Flow" anchor="message_flow">
       <t> An OTR conversations
         <figure><artwork><![CDATA[
@@ -312,6 +336,13 @@ Alice and Bob's long-term authentication public keys are pubA and pubB, respecti
        </section> 
       </section> 
      </section> 
+
+      <section title="Instance tags" anchor="instance-signon">
+<t>
+. Instance tags are 32-bit values that are intended to be persistent. If same client is logged into the same account from multiple locations, the intention is that the client will have different instance tags at each location. As shown below, OTR messages (fragmented and unfragmented) include the source and destination instance tags. If a client receives a message that lists a destination instance tag different from its own, the client should discard the message.</t>
+      <t>The smallest valid instance tag is 0x00000100. It is appropriate to set the destination instance tag to '0' when an actual destination instance tag is not known at the time the message is prepared. If a client receives a message with the sender instance tag set to less than 0x00000100, it should discard the message. Similarly, if a client receives a message with the recipient instance tag set to greater than 0 but less than 0x00000100, it should discard the message.</t>
+      <t>This avoids an issue on IM networks that always relay all messages to all sessions of a client who is logged in multiple times. In this situation, OTR clients can attempt to establish an OTR session indefinitely if there are interleaving messages from each of the sessions.</t>
+      </section>
 
      <section title="Fragmentation" anchor="fragmentation">
       <t>
