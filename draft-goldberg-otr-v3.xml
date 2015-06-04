@@ -39,17 +39,10 @@
       </address>
     </author>
     <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre" role="editor">
-      <organization>Cisco</organization>
+      <organization>&amp;yet</organization>
       <address>
-        <postal>
-          <street>1899 Wynkoop Street, Suite 600</street>
-          <city>Denver</city>
-          <region>CO</region>
-          <code>80202</code>
-          <country>USA</country>
-        </postal>
-        <phone>+1-303-308-3282</phone>
-        <email>psaintan@cisco.com</email>
+        <email>peter@andyet.com</email>
+        <uri>https://andyet.com</uri>
       </address>
     </author>
     <author initials='P.' surname="Wouters" fullname='Paul Wouters' role="editor">
@@ -58,13 +51,7 @@
        <email>pwouters@redhat.com</email>
       </address>
      </author>
-    <author initials='G.' surname="Bilkey" fullname='Geordie Bilkey' role="editor">
-      <organization>PowerInform</organization>
-      <address>
-       <email>geordie@powerinform.com</email>
-      </address>
-     </author>
-    <date month="September" year="2013"/>
+    <date/>
     <abstract>
       <t>This document describes version 3 of the Off-the-Record Messaging protocol ("OTR").  The protocol is used for one-to-one end-to-end encryption of message content exchanged via any kind of instant messaging transport. It provides authenticity, privacy, perfect forward secrecry and repudiation. Additionally, it allows negotiating a symmetric encryption key that can be used for bulk data transfer, such as file transfers or audio/video transmissions. OTR assumes a network model that provides in-order delivery of messages, but also assumes that some messages might not be delivered at all (for example, if the intended recipient disconnects).  OTR is designed to protect the confidentiality of messages against passive and active attackers, but it not designed to protect against some other attacks (e.g., Denial of Service).</t>
     </abstract>
@@ -153,8 +140,7 @@ ed history.</t>
     <section title="Protocol Description" anchor="protocol">
 
      <section title="Message Encoding" anchor="message_encoding">
-      <t>User data (eg the conversation) can be extended with any number of TLV's. This data is than encrypted, and encoded with BASE64
-      </t>
+      <t>User data (eg the conversation) can be extended with any number of TLV's. This data is than encrypted, and encoded with Base64 <xref target='RFC4648'/>.</t>
       <section title="UTF-8 and html" anchor="utf8">
        <t>
        </t>
