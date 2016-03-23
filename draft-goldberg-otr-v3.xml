@@ -39,10 +39,10 @@
       </address>
     </author>
     <author initials="P." surname="Saint-Andre" fullname="Peter Saint-Andre" role="editor">
-      <organization>&amp;yet</organization>
+      <organization>Filament</organization>
       <address>
-        <email>peter@andyet.com</email>
-        <uri>https://andyet.com</uri>
+        <email>peter@filament.com</email>
+        <uri>https://filament.com/</uri>
       </address>
     </author>
     <author initials='P.' surname="Wouters" fullname='Paul Wouters' role="editor">
@@ -145,7 +145,7 @@ ed history.</t>
        <t>
        </t>
       </section> 
-      <section title="BASE64" anchor="base64">
+      <section title="Base64" anchor="base64">
        <t>
        </t>
       </section> 
