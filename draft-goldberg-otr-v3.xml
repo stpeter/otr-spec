@@ -53,25 +53,24 @@
      </author>
     <date/>
     <abstract>
-      <t>This document describes version 3 of the Off-the-Record Messaging protocol ("OTR").  The protocol is used for one-to-one end-to-end encryption of message content exchanged via any kind of instant messaging transport. It provides authenticity, privacy, perfect forward secrecry and repudiation. Additionally, it allows negotiating a symmetric encryption key that can be used for bulk data transfer, such as file transfers or audio/video transmissions. OTR assumes a network model that provides in-order delivery of messages, but also assumes that some messages might not be delivered at all (for example, if the intended recipient disconnects).  OTR is designed to protect the confidentiality of messages against passive and active attackers, but it not designed to protect against some other attacks (e.g., Denial of Service).</t>
+      <t>This document describes version 3 of the Off-the-Record Messaging protocol ("OTR").  The protocol is used for end-to-end encryption of one-to-one messages exchanged over any instant messaging transport.  OTR provides authenticity, privacy, perfect forward secrecy, and repudiation of messages.  Additionally, it enables the negotiation of a symmetric encryption key that can be used for bulk data transfer, such as file transfers or audio/video transmissions. OTR assumes a network model that provides in-order delivery of messages, but also assumes that some messages might not be delivered at all (for example, if the intended recipient disconnects).  OTR is designed to protect the confidentiality of messages against passive and active attackers, but is not designed to protect against some other attacks (e.g., Denial of Service).</t>
     </abstract>
   </front>
 
   <middle>
 
     <section title="Introduction" anchor='intro'>
-      <t>This document describes version 3 of the Off-the-Record Messaging protocol ("OTR").  The protocol is used for end-to-end encryption of message content exchanged via common instant messaging transports.  OTR assumes a network model that provides in-order delivery of messages, but also assumes that some messages might not be delivered at all (for example, if the intended recipient disconnects).  OTR is designed to protect the confidentiality of messages against passive and active attackers, but it not designed to protect against some other attacks (e.g., Denial of Service).</t>
-<t>DESIGN GOALS</t>
-
+      <t>Instant messaging ("IM"), also known as chat, continues to be a popular application among Internet users. Most IM systems are implemented using a client-server architecture; in such systems, transport security that is applied to a client-to-server connection protects against certain attacks (e.g., eavesdropping) but not against malicious, incompetent, or compromised IM service providers.  In order to protect against a wider range of attacks, it is necessary for a client software application (a.k.a. "user agent") to encrypt messages "end-to-end", such that a message can be decrypted only by the intended recipient controlling another user agent.</t>
+      <t>The Off-the-Record Messaging protocol ("OTR") is a widely-deployed technology that provides end-to-end encryption of IM communications; in particular, OTR is designed to protect the confidentiality of instant messages against both passive and active attacks over any underlying instant messaging system.</t>
       <t>In essence, the protocol proceeds as follows:</t>
       <t>
         <list style='numbers'>
           <t>Alice signals to Bob that she would like to use OTR to communicate (using an "OTR Query Message") or that she is willing to use OTR to communicate (using a whitespace-tagged plaintext message).  Both mechanisms convey the version(s) of OTR that Alice supports.</t>
-          <t>Bob initiates an authenticated key exchange (AKE) with Alice.  (Version 3 of OTR uses a variant of the SIGMA protocol as its AKE.)</t>
+          <t>Bob initiates an authenticated key exchange (AKE) with Alice.</t>
           <t>Alice and Bob exchange Data Messages in order to send information to each other.</t>
         </list>
       </t>
-      <t>Details are provided under <xref target='overview'/> and <xref target='protocol'/>.</t>
+      <t>To encourage consistent implementation of OTR in IM client applications, this specification provides detailed, stable documentation of OTR version 3.  (More information about OTR can be found at <eref target="https://otr.cypherpunks.ca/">https://otr.cypherpunks.ca/</eref>.)</t>
     </section>
 
     <section title="Terminology" anchor="terms">
